@@ -2,6 +2,10 @@
 
 ___author__= 'RanHoNg'
 
+'''
+coroweb
+'''
+
 import asyncio, os, inspect, logging, functools
 
 from urllib import parse
@@ -52,19 +56,19 @@ def get_named_kw_args(fn):
 			args.append(name)
 	return tuple(args)
 
-def has_named_kw_args(fn):
+def has_named_kw_args(fn): #命名关键字参数
 	params = inspect.signature(fn).parameters
 	for name, param in params.items():
 		if param.kind == inspect.Parameter.KEYWORD_ONLY:
 			return True
 
-def has_var_kw_arg(fn):
+def has_var_kw_arg(fn): #关键字参数
 	params = inspect.signature(fn).parameters
 	for name, param in params.items():
 		if param.kind == inspect.Parameter.VAR_KEYWORD:
 			return True
 
-def has_request_arg(fn):
+def has_request_arg(fn): #有没有‘request’参数
 	sig = inspect.signature(fn)
 	params = sig.parameters
 	found = False
@@ -108,7 +112,7 @@ class RequestHandler(object):
 				if qs:
 					kw = dict()
 					for k, v in parse_qs(qs, True).items():
-						kw[k] = v[]
+						kw[k] = v
 		if kw is None:
 			kw = dict(**request.match_info)
 		else:

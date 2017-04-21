@@ -16,6 +16,7 @@ from jinja2 import Environment, FileSystemLoader
 
 import orm
 from coroweb import add_routes, add_static
+from config import configs
 
 def init_jinja2(app, **kw):
 	logging.info('init jinja2...')
@@ -61,7 +62,7 @@ async def response_factory(app, handler):
 	async def response(request):
 		logging.info('Response handler...')
 		r = await handler(request)
-		if isinstance(r, web, StreamResponse):
+		if isinstance(r, web.StreamResponse):
 			return r
 		if isinstance(r, bytes):
 			resp = web.Response(body=r)
@@ -108,11 +109,8 @@ def datetime_filter(t):
 	dt = datetime.fromtimestamp(t)
 	return u'%s年%s月%s日' % (dt.year, dt.month, dt.day)
 
-# def index(request):
-# 	return web.Response(body=b'<html><body><h1>Awesom</h1></body></html>')
-
 async def init(loop):
-	await orm.create_pool(loop=loop, host='127.0.0.1', port=3306, user='www', password='www', db='awesome')
+	await orm.create_pool(loop=loop, host=configs.db.host, port=configs.db.port, user=configs.db.user, password=configs.db.password, db=configs.db.database)
 	app = web.Application(loop=loop, middlewares=[
 		logger_factory, response_factory
 		])
@@ -121,10 +119,6 @@ async def init(loop):
 	add_static(app)
 	srv = await loop.create_server(app.make_handler(), '127.0.0.1', 9000)
 	logging.info('server started at http://127.0.0.1:9000...')
-	# app = web.Application(loop=loop)
-	# app.router.add_route('GET', '/', index)
-	# srv = await loop.create_server(app.make_handler(), '127.0.0.1', 9000)
-	# logging.info('server started at http://127.0.0.1:9000...')
 	return srv
 
 loop = asyncio.get_event_loop()
