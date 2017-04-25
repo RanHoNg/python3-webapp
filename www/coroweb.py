@@ -85,10 +85,10 @@ class RequestHandler(object):
 		self._app = app
 		self._func = fn
 		self._has_request_arg = has_request_arg(fn)
-		self._has_var_kw_arg = has_var_kw_arg(fn)
-		self._has_named_kw_args = has_named_kw_args(fn)
+		self._has_var_kw_arg = has_var_kw_arg(fn) #has kind like **kw
+		self._has_named_kw_args = has_named_kw_args(fn) #has kind like *[a], b, c
 		self._named_kw_args = get_named_kw_args(fn)
-		self._required_kw_args = get_required_kw_args(fn)
+		self._required_kw_args = get_required_kw_args(fn) #has kind like *[a], b, c and got no default parameter
 
 	async def __call__(self,request):
 		kw = None
@@ -108,13 +108,13 @@ class RequestHandler(object):
 				else:
 					return web.HTTPBadRequest('Unsupported Content-Type: %s' % request.content_type)
 			if request.method == 'GET':
-				qs = request.query_string
+				qs = request.query_string #with url like ?a=1&b=2
 				if qs:
 					kw = dict()
-					for k, v in parse_qs(qs, True).items():
-						kw[k] = v
+					for k, v in parse.parse_qs(qs, True).items():
+						kw[k] = v[0]
 		if kw is None:
-			kw = dict(**request.match_info)
+			kw = dict(**request.match_info) #with url like /hello/{name}/{age}
 		else:
 			if not self._has_var_kw_arg and self._named_kw_args:
 				# remove all unnamed kw:

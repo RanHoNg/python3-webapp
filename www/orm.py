@@ -167,7 +167,7 @@ class Model(dict, metaclass=ModelMetaclass):
 		orderBy = kw.get('orderBy', None)
 		if orderBy:
 			sql.append('order by')
-			aql.append(orderBy)
+			sql.append(orderBy)
 		limit = kw.get('limit', None)
 		if limit is not None:
 			sql.append('limit')
@@ -175,8 +175,8 @@ class Model(dict, metaclass=ModelMetaclass):
 				sql.append('?')
 				args.append(limit)
 			elif isinstance(limit, tuple) and len(limit) == 2:
-				sql.append('?', '?')
-				args.append(limit)
+				sql.append('?, ?')
+				args.extend(limit)
 			else:
 				raise ValueError('Invalid limit value: %s' % str(limit))
 		rs = await select(' '.join(sql), args)
