@@ -358,12 +358,12 @@ if (typeof(Vue)!=='undefined') {
     });
     Vue.component('vpagination', {
         props: ['page'],
-        template: '<ul class="uk-pagination">' +
-                '<li v-if="! page.has_previous" class="uk-disabled"><span><i class="uk-icon-angle-double-left"></i></span></li>' +
-                '<li v-if="page.has_previous"><a v-on:click="\'gotoPage(\' + (page.page_index-1) + \')\'" href="#0"><i class="uk-icon-angle-double-left"></i></a></li>' +
+        template: '<ul class="uk-pagination uk-flex-center" uk-margin>' +
+                '<li v-if="! page.has_previous" class="uk-disabled"><a><span uk-pagination-previous></span></a></li>' +
+                '<li v-if="page.has_previous"><a v-on:click="gotoPage(page.page_index-1)" href="#0"><span uk-pagination-previous></span></a></li>' +
                 '<li class="uk-active"><span v-text="page.page_index"></span></li>' +
-                '<li v-if="! page.has_next" class="uk-disabled"><span><i class="uk-icon-angle-double-right"></i></span></li>' +
-                '<li v-if="page.has_next"><a v-on:click="\'gotoPage(\' + (page.page_index+1) + \')\'" href="#0"><i class="uk-icon-angle-double-right"></i></a></li>' +
+                '<li v-if="! page.has_next" class="uk-disabled"><a><span uk-pagination-next></span></a></li>' +
+                '<li v-if="page.has_next"><a v-on:click="gotoPage(page.page_index+1)" href="#0"><span uk-pagination-next></span></a></li>' +
                 '</ul>'
     });
     Vue.component('my-component', {
